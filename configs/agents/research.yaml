@@ -1,0 +1,11 @@
+name: research-agent
+description: single-step research summarizer
+model:
+  provider: ${AINF_LLM_PROVIDER:-mock}
+  name: ${AINF_LLM_MODEL:-gpt-4.1-mini}
+prompts:
+  system: prompts/system/research.md
+  task: prompts/tasks/research_task.md
+runtime:
+  max_iterations: 1
+  temperature: 0.2
