@@ -1,0 +1,2 @@
+{"query":"AI native repo frame should include what modules?","context":["Need CI/CD, prompts, and evals"],"expected_keywords":["repo","CI/CD"]}
+{"query":"How to rollout agent changes safely in production?","context":["Team uses GitHub Actions and Docker"],"expected_keywords":["production","risks"]}

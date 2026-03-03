@@ -1,0 +1,11 @@
+name: research-pipeline
+version: 1
+steps:
+  - id: run_research_agent
+    agent: research-agent
+    input:
+      query: "${request.query}"
+      context: "${request.context}"
+outputs:
+  answer: "${steps.run_research_agent.answer}"
+  model: "${steps.run_research_agent.model}"
