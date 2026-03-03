@@ -1,45 +1,47 @@
-# CI/CD 设计
+# 🔄 CI/CD for Frontend-First Delivery
 
-## CI（`.github/workflows/ci.yml`）
+## ✅ CI Pipeline (`.github/workflows/ci.yml`)
 
-触发条件：
+### 🚦 Triggers
 
-- 任意 `push`
-- 任意 `pull_request`
+- Every `push`
+- Every `pull_request`
 
-执行阶段：
+### 🛠️ Stages
 
-1. 安装依赖（`pip install -e ".[dev]"`）
-2. 代码质量检查（`ruff check` + `ruff format --check`）
-3. 类型检查（`mypy src`）
-4. 单元测试（`pytest`）
-5. Eval 冒烟（`python -m ai_native_frame.evals.runner ...`）
+1. Setup Node.js 22
+2. Install dependencies (`npm ci` in `apps/web`)
+3. Run lint checks (`npm run lint`)
+4. Run type-safe production build (`npm run build`)
 
-目标：
+### 🎯 CI Intent
 
-- 对语法、风格、类型、基础行为、最小效果做统一门禁；
-- 把 AI 工程的评测流程纳入标准 CI。
+- Catch frontend quality issues early (lint + type/build checks)
+- Keep pull requests merge-ready with a minimal and reliable gate
 
-## CD（`.github/workflows/cd.yml`）
+## 🚀 CD Pipeline (`.github/workflows/cd.yml`)
 
-触发条件：
+### 🚦 Triggers
 
-- `main` 分支 push
-- `v*` tag push
-- 手动触发（`workflow_dispatch`）
+- Push to `main`
+- Push tags matching `v*`
+- Manual trigger (`workflow_dispatch`)
 
-执行阶段：
+### 🛠️ Stages
 
-1. 登录 GHCR
-2. 生成镜像 metadata（branch/tag/sha/latest）
-3. 构建并推送 Docker 镜像
+1. Login to GHCR
+2. Generate Docker tags/labels from branch/tag/SHA
+3. Build frontend image from `Dockerfile`
+4. Push image to `ghcr.io`
 
-目标：
+### 🎯 CD Intent
 
-- 固化产物版本，保证可追溯；
-- 让分支/Tag 到镜像发布的路径标准化。
+- Provide traceable frontend artifacts for every important release path
+- Keep release operations deterministic and scriptable
 
-## 依赖治理（`.github/dependabot.yml`）
+## 🔐 Dependency Governance (`.github/dependabot.yml`)
 
-- 每周自动检查 `pip` 与 `github-actions` 更新；
-- 保持基础依赖与 CI action 版本健康。
+- Weekly updates for:
+  - npm packages in `apps/web`
+  - GitHub Actions workflow dependencies
+- Keeps both runtime and delivery tooling current

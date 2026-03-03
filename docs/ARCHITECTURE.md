@@ -1,55 +1,46 @@
-# AI-native Frame 架构说明
+# 🏗️ Frontend-First Architecture
 
-## 1. 设计目标
+## 🎯 Goal
 
-这个示例仓库用于展示一个最小可运行、可持续演进的 AI-native 工程骨架。核心原则如下：
+This repository now prioritizes fast frontend delivery for AI-native products.
+The current baseline is optimized for **UI iteration speed**, **spec-driven implementation**, and **predictable release flow**.
 
-- **代码与 Prompt 并行管理**：prompt 文件被纳入版本控制并可在 CI 中验证。
-- **模型可替换**：通过 provider 抽象，支持 `mock` 与真实模型切换。
-- **评测前置**：在单测之外引入 eval smoke，避免“能跑但效果漂移”。
-- **交付可自动化**：主干分支与 tag 自动构建镜像，减少手工发布。
+## 🧱 Main Layers
 
-## 2. 分层结构
+### 1) 🌐 UI App Layer (`apps/web`)
 
-### API 层（`src/ai_native_frame/api.py`）
+- Vite + React + TypeScript application
+- Component-driven and feature-oriented structure
+- Fast local feedback loop (HMR + strict TypeScript)
 
-- 提供 `health` 与 `research task` HTTP 接口；
-- 负责请求校验与响应模型封装；
-- 不直接耦合具体模型实现。
+### 2) 🧭 Spec Layer (`specs/`)
 
-### Workflow 层（`src/ai_native_frame/workflows/`）
+- Product and feature-level planning templates
+- Technical, UI/UX, testing, and release templates
+- Creates a shared language for PM, Design, and Engineering
 
-- 编排任务执行路径；
-- 管理“输入 -> Agent -> 输出”的流程；
-- 作为未来多 Agent / Tool Calling / RAG 的接入点。
+### 3) 📝 Decision Layer (`docs/adr/`)
 
-### Agent 层（`src/ai_native_frame/agents/`）
+- Architecture Decision Records (ADR)
+- Captures trade-offs and decision history over time
+- Helps future contributors understand "why", not only "what"
 
-- 负责构造上下文和提示词；
-- 调用 LLM 抽象接口；
-- 输出标准化结果对象。
+### 4) 🔁 Delivery Layer (`.github/workflows/`)
 
-### LLM Provider 层（`src/ai_native_frame/llm/`）
+- CI for lint and build checks
+- CD for frontend container build + GHCR publish
+- Dependabot for dependency freshness
 
-- `mock` provider：零密钥、可重复、适合 CI；
-- `openai` provider：用于真实线上推理；
-- `factory` 根据环境变量选择具体实现。
+## 🧩 Design Principles
 
-### Prompt 与配置层（`prompts/` + `configs/`）
+- **Frontend-first, not framework-locked**: default is Vite, migration to other frameworks is allowed.
+- **Spec before code**: templates are first-class artifacts, not optional attachments.
+- **Automated quality gates**: every change should pass lint and build in CI.
+- **Explicit decisions**: major architecture changes must come with an ADR.
 
-- Prompt 文件化，支持版本比较与回滚；
-- Agent / Workflow 运行配置可单独演进；
-- 保持“代码逻辑”和“提示策略”解耦。
+## 🗺️ Evolution Path
 
-### Eval 层（`src/ai_native_frame/evals` + `evals/datasets`）
-
-- 数据集使用 JSONL；
-- 通过 `ainf-eval` 或模块命令触发；
-- 在 CI 里执行 smoke 级门禁。
-
-## 3. 未来可扩展点
-
-- 挂载向量数据库与检索（当前 compose 内已预置 Qdrant）；
-- 增加多 Agent 路由、反思链路与工具调用；
-- 加入线上观测（trace/span/token/cost）与告警；
-- 增加离线 benchmark 与回归评测矩阵。
+1. Add module-level boundaries in `apps/web` (feature folders and shared packages).
+2. Introduce visual regression and E2E tests.
+3. Add optional BFF/API services when product complexity requires it.
+4. Extend observability (frontend telemetry + release quality signals).
