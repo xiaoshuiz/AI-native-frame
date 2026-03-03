@@ -3,7 +3,7 @@ FRONTEND_DIR ?= apps/web
 .PHONY: setup dev lint typecheck build preview ci
 
 setup:
-	npm --prefix $(FRONTEND_DIR) install
+	npm --prefix $(FRONTEND_DIR) ci
 
 dev:
 	npm --prefix $(FRONTEND_DIR) run dev

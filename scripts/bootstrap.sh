@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-npm --prefix apps/web install
+npm --prefix apps/web ci
 
 cp -n .env.example apps/web/.env.local || true
 
