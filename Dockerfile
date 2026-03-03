@@ -1,23 +1,17 @@
-FROM python:3.12-slim
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
-RUN useradd -m appuser
+COPY apps/web/package*.json ./
+RUN npm ci
 
-COPY pyproject.toml README.md ./
-COPY src ./src
-COPY prompts ./prompts
-COPY evals ./evals
-COPY configs ./configs
+COPY apps/web ./
+RUN npm run build
 
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir .
+FROM nginx:1.27-alpine
 
-USER appuser
+COPY --from=build /app/dist /usr/share/nginx/html
 
-EXPOSE 8000
+EXPOSE 80
 
-CMD ["uvicorn", "ai_native_frame.api:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["nginx", "-g", "daemon off;"]

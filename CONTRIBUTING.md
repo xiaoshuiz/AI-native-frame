@@ -1,29 +1,36 @@
-# Contributing
+# 🤝 Contributing Guide
 
-## 1. 本地开发
+## ⚙️ 1. Local setup
 
 ```bash
 ./scripts/bootstrap.sh
-source .venv/bin/activate
+make dev
 ```
 
-## 2. 提交前检查
+## ✅ 2. Checks before opening a PR
 
 ```bash
-make format
 make ci
 ```
 
-## 3. 目录约定
+## 🧱 3. Repository conventions
 
-- `src/`：应用核心代码
-- `prompts/`：提示词模板
-- `evals/`：评测数据
-- `configs/`：运行配置
-- `docs/`：架构与流程文档
+- `apps/web/`: frontend application code
+- `docs/`: architecture, CI/CD, and decision records
+- `specs/`: product/feature/technical/testing templates
+- `.github/`: CI workflows and collaboration templates
 
-## 4. 提交规范
+## 📝 4. Spec-first workflow
 
-- 一个 commit 只做一类逻辑修改；
-- 涉及行为变更必须补测试；
-- 涉及 prompt 变更建议补 eval 样本。
+Before large implementation work:
+
+1. Start from a file in `specs/templates/`
+2. Fill product and feature context
+3. Add technical decisions and risks
+4. Link the spec in your PR description
+
+## 🧾 5. Commit and PR rules
+
+- Keep each commit focused on one logical change
+- Include screenshots or recordings for UI changes
+- Include an ADR when changing architecture-level decisions

@@ -1,31 +1,23 @@
-PYTHON ?= python3
-VENV ?= .venv
+FRONTEND_DIR ?= apps/web
 
-.PHONY: setup run lint format typecheck test eval ci
+.PHONY: setup dev lint typecheck build preview ci
 
 setup:
-	$(PYTHON) -m venv $(VENV)
-	$(VENV)/bin/pip install --upgrade pip
-	$(VENV)/bin/pip install -e ".[dev]"
+	npm --prefix $(FRONTEND_DIR) install
 
-run:
-	$(VENV)/bin/uvicorn ai_native_frame.api:app --reload --host 0.0.0.0 --port 8000
+dev:
+	npm --prefix $(FRONTEND_DIR) run dev
 
 lint:
-	$(VENV)/bin/ruff check src tests
-	$(VENV)/bin/ruff format --check src tests
-
-format:
-	$(VENV)/bin/ruff check --fix src tests
-	$(VENV)/bin/ruff format src tests
+	npm --prefix $(FRONTEND_DIR) run lint
 
 typecheck:
-	$(VENV)/bin/mypy src
+	npm --prefix $(FRONTEND_DIR) run typecheck
 
-test:
-	$(VENV)/bin/pytest
+build:
+	npm --prefix $(FRONTEND_DIR) run build
 
-eval:
-	$(VENV)/bin/python -m ai_native_frame.evals.runner --dataset evals/datasets/sample_tasks.jsonl
+preview:
+	npm --prefix $(FRONTEND_DIR) run preview
 
-ci: lint typecheck test eval
+ci: lint build
